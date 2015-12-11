@@ -12,7 +12,7 @@ public class RefuseAlwaysSupermarketAgent extends SupermarketAgent{
 		DetalleProducto sellDetail = new DetalleProducto();
 		sellDetail.setProducto(content.getProducto());
 		sellDetail.setCantidad(10000);
-		sellDetail.setPrecio(1.5f);
+		sellDetail.setPrecio(0.1f);
 
 		return sellDetail;
 	}

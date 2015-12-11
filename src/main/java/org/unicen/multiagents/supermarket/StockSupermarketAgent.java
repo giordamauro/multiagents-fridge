@@ -22,6 +22,19 @@ public class StockSupermarketAgent extends SupermarketAgent{
 		productsStock.put(productName, detalleProducto);
 	}
 	
+	protected void setup(){
+		
+		Object[] arguments = getArguments();
+
+		for(Object argument : arguments){
+			
+			DetalleProducto detalleProducto = (DetalleProducto) argument;
+			productsStock.put(detalleProducto.getProducto(), detalleProducto);
+		}
+		
+		super.setup();
+	}
+	
 	protected DetalleProducto getProductSellDetail(DetalleProducto detalleProducto) {
 
 		String productName = detalleProducto.getProducto();

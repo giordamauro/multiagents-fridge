@@ -17,19 +17,18 @@ public class QuerySupermarketsBehaviour extends OneShotBehaviour {
 	private static final long serialVersionUID = 4098778181086476506L;
 
 	private final DetalleProducto productDetail;
-	private final FridgeControllerAgent myFridgeAgent;
 	
 	private final List<SupermarketProductDetail> possibleSupermarkets = new ArrayList<>();
 
 	public QuerySupermarketsBehaviour(DetalleProducto productDetail) {
 		super();
-		this.myFridgeAgent = (FridgeControllerAgent) myAgent;
-
+		
 		this.productDetail = productDetail;
 	}
 
 	public void action() {
 		
+		FridgeControllerAgent myFridgeAgent = (FridgeControllerAgent) myAgent;
 		List<AID> publishedServices = myFridgeAgent.getPublishedSupermarkets();
 		
 		for(AID supermarket : publishedServices){
@@ -40,6 +39,7 @@ public class QuerySupermarketsBehaviour extends OneShotBehaviour {
 			
 				if(supermarketInform.getCantidad() >= productDetail.getCantidad()){
 				
+					supermarketInform.setCantidad(productDetail.getCantidad());
 					SupermarketProductDetail supermarketProductDetail = new SupermarketProductDetail(supermarket, supermarketInform);
 					possibleSupermarkets.add(supermarketProductDetail);
 				}

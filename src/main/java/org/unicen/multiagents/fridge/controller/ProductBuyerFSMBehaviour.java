@@ -11,11 +11,9 @@ public class ProductBuyerFSMBehaviour extends FSMBehaviour {
 	private static final long serialVersionUID = -2881775527407350732L;
 
 	private final String product;
-	private final float amount;
 
 	ProductBuyerFSMBehaviour(Fridge fridge, String product, float amount) {
 		this.product = product;
-		this.amount = amount;
 
 		DataStore dataStore = new DataStore();
 		
@@ -59,8 +57,6 @@ public class ProductBuyerFSMBehaviour extends FSMBehaviour {
 	
 	@Override
 	public int onEnd() {
-
-		System.out.println("Finished buying " + product + " - " + amount);
 
 		FridgeControllerAgent controllerAgent = (FridgeControllerAgent) myAgent;
 		controllerAgent.onBuyProductEnd(this);

@@ -19,7 +19,7 @@ public class BuyLowestPriceBehaviour extends OneShotBehaviour {
 	private static final long serialVersionUID = 4098778181086476506L;
 
 	private boolean supermarketAgree;
-	private ComprarProducto comprarProducto;
+	private SupermarketProductDetail productDetail;
 	
 	public void action() {
 
@@ -33,18 +33,21 @@ public class BuyLowestPriceBehaviour extends OneShotBehaviour {
 		int i = 0;
 		while(!supermarketAgree && i < supermarkets.size()){
 		
-			SupermarketProductDetail productDetail = supermarkets.get(i);
+			productDetail = supermarkets.get(i);
 			DetalleProducto detalleProducto = productDetail.getDetalleProducto();
 			
 			float montoTotal = detalleProducto.getPrecio() * detalleProducto.getCantidad();
+			productDetail.setMontoTotal(montoTotal);
 			
-			comprarProducto = new ComprarProducto();
+			ComprarProducto comprarProducto = new ComprarProducto();
 			comprarProducto.setProducto(detalleProducto.getProducto());
 			comprarProducto.setCantidad(detalleProducto.getCantidad());
 			comprarProducto.setMontoTotal(montoTotal);
 
 			sendProductBuyRequest(productDetail.getSupermarketAID(), comprarProducto);
 			supermarketAgree = getSupermarketAgree();
+			
+			i++;
 		}
 	}	
 	
@@ -57,7 +60,7 @@ public class BuyLowestPriceBehaviour extends OneShotBehaviour {
 			state = BuyLowestPriceState.PRODUCT_BUY_AGREE;
 
 			DataStore dataStore = getDataStore();
-			dataStore.put(state.name(), comprarProducto);
+			dataStore.put(state.name(), productDetail);
 		}
 		
 		return state.value();

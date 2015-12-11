@@ -34,7 +34,7 @@ public class FridgeConsumerAgent extends Agent {
 
 		float randomAmount = RANDOM.nextFloat() * productStock;
 		
-		if(productStock - randomAmount < 0.001){
+		if(productStock - randomAmount < 1){
 			randomAmount = productStock;
 		}
 		

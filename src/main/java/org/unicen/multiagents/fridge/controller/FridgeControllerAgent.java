@@ -1,8 +1,9 @@
 package org.unicen.multiagents.fridge.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.unicen.multiagents.fridge.Fridge;
 import org.unicen.multiagents.ontology.ProductoOntology;
@@ -22,7 +23,7 @@ public class FridgeControllerAgent extends Agent {
 	private static final long serialVersionUID = 2018654645044400844L;
 	
 	private final List<String> requestedProducts = new ArrayList<>();
-	private final List<AID> supermarketServices = new ArrayList<>();
+	private final Set<AID> supermarketServices = new HashSet<>();
 
 	private ACLMessage subscriptionMessage;
 	private Fridge fridge;
@@ -53,7 +54,7 @@ public class FridgeControllerAgent extends Agent {
 	}
 	
 	List<AID> getPublishedSupermarkets(){
-		return Collections.unmodifiableList(supermarketServices);
+		return new ArrayList<AID>(supermarketServices);
 	}
 	
 	Fridge getFridge(){
@@ -104,7 +105,8 @@ public class FridgeControllerAgent extends Agent {
 	
 		for (DFAgentDescription description : result) {
 			
-			supermarketServices.add(description.getName());
+			AID agentId = description.getName();
+			supermarketServices.add(agentId);
 		}
 	}
 	
@@ -121,7 +123,7 @@ public class FridgeControllerAgent extends Agent {
 				
 				if(productStock == 0){
 					requestedProducts.add(product);
-					initProductBuyConversation(product, 20);
+					initProductBuyConversation(product, 10);
 				}
 			}
 		}

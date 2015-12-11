@@ -8,6 +8,7 @@ class SupermarketProductDetail implements Comparable<SupermarketProductDetail>{
 
 	private final AID supermarketAID;
 	private final DetalleProducto detalleProducto;
+	private float montoTotal;
 	
 	public SupermarketProductDetail(AID supermarketAID, DetalleProducto detalleProducto) {
 	
@@ -25,23 +26,24 @@ class SupermarketProductDetail implements Comparable<SupermarketProductDetail>{
 	
 	@Override
 	public int compareTo(SupermarketProductDetail o) {
+		
+		Float precio = detalleProducto.getPrecio();
+		Float oPrice = o.getDetalleProducto().getPrecio();
+		
+		return precio.compareTo(oPrice);
+	}
 	
-		float oPrice = o.getDetalleProducto().getPrecio();
-		
-		if(oPrice > detalleProducto.getPrecio()){
-			return -1;
-		}
-		else if(oPrice < detalleProducto.getPrecio()){
-			return 1;
-		}
-		
-		return 0;
+	public float getMontoTotal() {
+		return montoTotal;
+	}
+
+	public void setMontoTotal(float montoTotal) {
+		this.montoTotal = montoTotal;
 	}
 
 	@Override
 	public String toString() {
-		return "SupermarketProductDetail [supermarketAID=" + supermarketAID + ", detalleProducto=" + detalleProducto
-				+ "]";
+		return "SupermarketProductDetail [supermarketAID=" + supermarketAID.getLocalName() + ", detalleProducto=" + detalleProducto
+				+ ", montoTotal=" + montoTotal + "]";
 	}
-
 }
