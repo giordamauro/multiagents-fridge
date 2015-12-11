@@ -60,7 +60,7 @@ public class FridgeControllerAgent extends Agent {
 		return fridge;
 	}
 
-	void onBuyProductEnd(CheckAndBuyProductFSMBehaviour buyProductBehaviour){
+	void onBuyProductEnd(ProductBuyerFSMBehaviour buyProductBehaviour){
 		
 		String product = buyProductBehaviour.getProduct();
 		requestedProducts.remove(product);
@@ -131,7 +131,7 @@ public class FridgeControllerAgent extends Agent {
 		
 		System.out.println(String.format("Initiating buy conversation for %s - Amount: %s", product, amount));
 		
-		addBehaviour(new CheckAndBuyProductFSMBehaviour(fridge, product, amount));
+		addBehaviour(new ProductBuyerFSMBehaviour(fridge, product, amount));
 	}
 	
 	private static DFAgentDescription getSupermarketAgentDescription(){
