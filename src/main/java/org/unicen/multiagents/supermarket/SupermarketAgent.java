@@ -25,7 +25,8 @@ public abstract class SupermarketAgent extends Agent {
 		
 		registerInDF();
 		
-		addBehaviour(new ProductSellerBehaviour());
+		addBehaviour(new ProductQueryBehaviour());
+		addBehaviour(new ProductRequestBehaviour());
 	}
 
 	private void registerInDF(){
