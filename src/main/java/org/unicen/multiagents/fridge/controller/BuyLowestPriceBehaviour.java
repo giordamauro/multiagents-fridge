@@ -2,6 +2,7 @@ package org.unicen.multiagents.fridge.controller;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.unicen.multiagents.ontology.ComprarProducto;
 import org.unicen.multiagents.ontology.DetalleProducto;
@@ -44,8 +45,8 @@ public class BuyLowestPriceBehaviour extends OneShotBehaviour {
 			comprarProducto.setCantidad(detalleProducto.getCantidad());
 			comprarProducto.setMontoTotal(montoTotal);
 
-			sendProductBuyRequest(productDetail.getSupermarketAID(), comprarProducto);
-			supermarketAgree = getSupermarketAgree();
+			UUID conversationId = sendProductBuyRequest(productDetail.getSupermarketAID(), comprarProducto);
+			supermarketAgree = getSupermarketAgree(conversationId);
 			
 			i++;
 		}
@@ -66,10 +67,13 @@ public class BuyLowestPriceBehaviour extends OneShotBehaviour {
 		return state.value();
 	}
 	
-	private void sendProductBuyRequest(AID supermarket, ComprarProducto productDetail){
+	private UUID sendProductBuyRequest(AID supermarket, ComprarProducto productDetail){
 	
+		UUID conversationId = UUID.randomUUID();
+		
 		try {
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+			msg.setConversationId(conversationId.toString());
 			msg.addReceiver(supermarket);
 			
 			msg.setLanguage(ProductoOntology.getCodecInstance().getName());
@@ -85,11 +89,13 @@ public class BuyLowestPriceBehaviour extends OneShotBehaviour {
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
+		
+		return conversationId;
 	}
 	
-	private boolean getSupermarketAgree() {
+	private boolean getSupermarketAgree(UUID conversationId) {
 
-		ACLMessage msgInform = myAgent.blockingReceive(MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.AGREE), MessageTemplate.MatchPerformative(ACLMessage.REFUSE)));
+		ACLMessage msgInform = myAgent.blockingReceive(MessageTemplate.and(MessageTemplate.MatchConversationId(conversationId.toString()), MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.AGREE), MessageTemplate.MatchPerformative(ACLMessage.REFUSE))));
 
 		return msgInform.getPerformative() == ACLMessage.AGREE; 
 	}

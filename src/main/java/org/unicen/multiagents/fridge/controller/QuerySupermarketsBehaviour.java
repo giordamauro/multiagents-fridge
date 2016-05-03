@@ -2,6 +2,7 @@ package org.unicen.multiagents.fridge.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.unicen.multiagents.ontology.DetalleProducto;
 import org.unicen.multiagents.ontology.ProductoOntology;
@@ -34,8 +35,8 @@ public class QuerySupermarketsBehaviour extends OneShotBehaviour {
 		for(AID supermarket : publishedServices){
 		
 			try {
-				sendQueryIfMessage(supermarket);
-				DetalleProducto supermarketInform = getSupermarketInform();
+				UUID conversationId = sendQueryIfMessage(supermarket);
+				DetalleProducto supermarketInform = getSupermarketInform(conversationId);
 			
 				if(supermarketInform.getCantidad() >= productDetail.getCantidad()){
 				
@@ -65,10 +66,13 @@ public class QuerySupermarketsBehaviour extends OneShotBehaviour {
 		return state.value();
 	}
 	
-	private void sendQueryIfMessage(AID supermarket){
+	private UUID sendQueryIfMessage(AID supermarket){
 	
+		UUID conversationId = UUID.randomUUID();
+
 		try {
 			ACLMessage msg = new ACLMessage(ACLMessage.QUERY_IF);
+			msg.setConversationId(conversationId.toString());
 			msg.addReceiver(supermarket);
 	
 			msg.setLanguage(ProductoOntology.getCodecInstance().getName());
@@ -81,12 +85,14 @@ public class QuerySupermarketsBehaviour extends OneShotBehaviour {
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
+		
+		return conversationId;
 	}
 
-	private DetalleProducto getSupermarketInform(){
+	private DetalleProducto getSupermarketInform(UUID conversationId){
 		
 		try{
-			ACLMessage msgInform = myAgent.blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+			ACLMessage msgInform = myAgent.blockingReceive(MessageTemplate.and(MessageTemplate.MatchConversationId(conversationId.toString()), MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
 			
 			DetalleProducto informContent = (DetalleProducto) myAgent.getContentManager().extractContent(msgInform);
 			
